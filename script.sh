@@ -20,7 +20,7 @@ pipeline () {
                }
                stage ('create vol container') {
 	          steps {
-		     sh ,docker run -d --name c6 -p 8012:80 -v vol8:/var/www/html i6 /bin/bash
+		     sh 'docker run -d --name c6 -p 8012:80 -v vol8:/var/www/html i6 /bin/bash'
 	          }
 	       }  
 	       stage ('verifying container') {
@@ -32,7 +32,7 @@ pipeline () {
 	          
 	       environment {
 	                    registry = "floydz/hari"
-			    registrycredential = 'abhigaduking3978@
+			    registrycredential = 'abhigaduking3978@'
 	       
 	       }
 	             steps {
@@ -41,7 +41,7 @@ pipeline () {
                }
                stage ('creating container') {
 	             steps {
-	                 sh 'docker run -d --name c14 -p 8015:80 i6 /bin/bash
+	                 sh 'docker run -d --name c14 -p 8015:80 i6 /bin/bash'
 	    	     }
                }	
          }
