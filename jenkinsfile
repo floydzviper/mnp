@@ -1,34 +1,43 @@
 pipeline () {
 	agent any
 	stages {
-	    stage ('building image') {
+	    stage('clean_up'){
+	    	steps{
+		  sh '''
+		    docker rmi -f i7:latest floydz/banglore:latest
+		    docker volume rm vol8
+		    docker rm -f c6 c14
+		  '''
+		}
+	    }
+	    stage ('building_image') {
 	       steps {
                  sh 'docker build -t i7 /var/lib/jenkins/workspace/git_integrate'
                }
              }
              
-              stage ('tagging image') {
+              stage ('tagging_image') {
 	        steps {
 	           sh 'docker tag i7:latest floydz/banglore:latest'
 	         }
                }
             
-               stage ('creating volume') {
+               stage ('creating_volume') {
 	          steps {
 	            sh 'docker volume create vol8'
 	           }	
                }
-               stage ('create vol container') {
+               stage ('create_vol_container') {
 	          steps {
-		     sh 'docker run -d --name c6 -p 8012:80 -v vol8:/var/www/html i6 /bin/bash'
+		     sh 'docker run -d --name c6 -p 8012:80 -v vol8:/var/www/html i7 /bin/bash'
 	          }
 	       }  
-	       stage ('verifying container') {
+	       stage ('verifying_container') {
 	          steps {
 		     sh 'docker container ls -a | grep c6'
 		  }
 	       }
-               stage ('pushing image') {
+               stage ('pushing_image') {
 	          
 	       environment {
 	                    registry = "floydz/hari"
@@ -39,9 +48,9 @@ pipeline () {
 		         sh 'docker push floydz/banglore:latest'
 	             }
                }
-               stage ('creating container') {
+               stage ('creating_container') {
 	             steps {
-	                 sh 'docker run -d --name c14 -p 8015:80 i6 /bin/bash'
+	                 sh 'docker run -d --name c14 -p 8015:80 i7 /bin/bash'
 	    	     }
                }	
          }
